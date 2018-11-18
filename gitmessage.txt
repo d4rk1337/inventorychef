@@ -1,0 +1,109 @@
+Initial commit
+
+- .gitignore
+	- Android Studio workstation files excluded
+	- Build foldes excluded
+
+- build.gradle
+	- Android member versionName set to '1.0.0'
+
+- proguard-rules.pro
+	- Inital commit of empty file
+
+- ApplicationTest.java
+	- Init commit with default application test case
+
+- AndroidManifest.xml
+	- ActivitySplash moved from 'net.d4rk.inventorychef' to 'net.d4rk.inventorychef.activities'
+	- Moved versionName to build.gradle
+
+- ActivitySplash.java
+	- Default Activity to start
+
+- activity_splash:
+	- TextView 'Hello world!' removed from default layout
+
+- ic_launcher
+	- Default launcher icon
+
+- values-de/strings:
+	- Application name defined (german)
+
+- values-w820dp/dimens:
+	- Default horizontal dimension for 7" and 10" devices
+
+- values/colors:
+	- Default colors for sample application
+
+- values/dimens:
+	- Default horizontal and vertical dimension for alle devices below 7"
+
+- values/strings:
+	- Application name defined (english)
+
+- values/styles:
+	- Default AppTheme style with dark colors
+
+- ExampleUnitTest:
+	- Sample test case with simple addition and equals operator
+
+- gradle.build
+	- Default project build definition with gradle classpath
+
+- gradle.properties:
+	- Inital commit of empty file
+
+- gradle-wrapper.jar
+	- Initial commit of gradle 2.10 wrapper jar
+
+- gradle-wrapper.properties:
+	- Initial commit of gradle 2.10 wrapper configuration
+
+- gradlew:
+	- Initial commit of gradle execute file for UNIX
+
+- gradlew.bat:
+	- Initial commit of gradle execute file for Windows
+
+- settings.gradle:
+	- Project module config file with app as main module
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+#
+# Initial commit
+#
+# Changes to be committed:
+#	new file:   .gitignore
+#	new file:   app/.gitignore
+#	new file:   app/build.gradle
+#	new file:   app/proguard-rules.pro
+#	new file:   app/src/androidTest/java/net/d4rk/inventorychef/ApplicationTest.java
+#	new file:   app/src/main/AndroidManifest.xml
+#	new file:   app/src/main/java/net/d4rk/inventorychef/activities/ActivitySplash.java
+#	new file:   app/src/main/res/layout/activity_splash.xml
+#	new file:   app/src/main/res/mipmap-hdpi/ic_launcher.png
+#	new file:   app/src/main/res/mipmap-mdpi/ic_launcher.png
+#	new file:   app/src/main/res/mipmap-xhdpi/ic_launcher.png
+#	new file:   app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+#	new file:   app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+#	new file:   app/src/main/res/values-de/strings.xml
+#	new file:   app/src/main/res/values-w820dp/dimens.xml
+#	new file:   app/src/main/res/values/colors.xml
+#	new file:   app/src/main/res/values/dimens.xml
+#	new file:   app/src/main/res/values/strings.xml
+#	new file:   app/src/main/res/values/styles.xml
+#	new file:   app/src/test/java/net/d4rk/inventorychef/ExampleUnitTest.java
+#	new file:   build.gradle
+#	new file:   gradle.properties
+#	new file:   gradle/wrapper/gradle-wrapper.jar
+#	new file:   gradle/wrapper/gradle-wrapper.properties
+#	new file:   gradlew
+#	new file:   gradlew.bat
+#	new file:   settings.gradle
+#
+# Changes not staged for commit:
+#	modified:   .gitignore
+#
