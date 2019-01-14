@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -29,6 +30,9 @@ public interface IngredientDao {
 
     @Insert
     void insertAll(Ingredient... ingredients);
+
+    @Query("UPDATE Ingredient SET Amount = :amount WHERE id = :id")
+    void updateAmount(long id, long amount);
 
     @Delete
     void delete(Ingredient ingredient);

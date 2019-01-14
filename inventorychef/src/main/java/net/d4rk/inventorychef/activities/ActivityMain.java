@@ -1,16 +1,24 @@
 package net.d4rk.inventorychef.activities;
 
+import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import net.d4rk.inventorychef.R;
 import net.d4rk.inventorychef.adapter.IngredientAdapter;
@@ -26,6 +34,8 @@ public class ActivityMain extends AppCompatActivity {
     private static final String TAG = ActivityMain.class.getName();
 
     private IngredientViewModel mIngredientViewModel;
+
+    private static final String[] INGREDIENT_SUGGESTIONS = new String[] { "Kartoffel", "Quark", "Milch", "Müsli", "Käseaufschnitt", "Frischkäse"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +80,41 @@ public class ActivityMain extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DatabaseInitializer.populateAsync(AppDatabase.getAppDatabase(ActivityMain.this));
+
+
+                    LayoutInflater inflater = ActivityMain.this.getLayoutInflater();
+
+                    final View dialogView =inflater.inflate(R.layout.dialog_newingredient, null);
+
+                    AutoCompleteTextView ingredientNameInput = dialogView.findViewById(R.id.dialog_newingredient_name);
+                    ArrayAdapter<String> ingredientNameAdapter = new ArrayAdapter<>(ActivityMain.this, android.R.layout.simple_list_item_1, INGREDIENT_SUGGESTIONS);
+                    ingredientNameInput.setAdapter(ingredientNameAdapter);
+
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ActivityMain.this, R.style.AppTheme_DialogAlert);
+                    builder.setTitle("Name");
+
+                    builder.setView(dialogView);
+
+// Set up the buttons
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+//                            m_Text = input.getText().toString();
+//                            DatabaseInitializer.populateAsync(AppDatabase.getAppDatabase(ActivityMain.this));
+                            EditText nameInput = dialogView.findViewById(R.id.dialog_newingredient_name);
+                            DatabaseInitializer.insertIngredientAsync(AppDatabase.getAppDatabase(ActivityMain.this), nameInput.getText().toString());
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    Dialog dialog = builder.create();
+                    dialog.show();
                 }
             });
 

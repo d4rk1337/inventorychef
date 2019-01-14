@@ -7,7 +7,6 @@ import android.arch.persistence.room.PrimaryKey;
 /**
  * Created by d4rk on 30/03/2018.
  */
-
     @Entity(tableName = "Ingredient")
     public class Ingredient {
 
@@ -27,7 +26,7 @@ import android.arch.persistence.room.PrimaryKey;
     private String unit;
 
     @ColumnInfo(name = "Amount")
-    private String amount;
+    private long amount = 0;
 
     @ColumnInfo(name = "Deleted")
     private boolean deleted;
@@ -41,6 +40,14 @@ import android.arch.persistence.room.PrimaryKey;
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getStorageId() {
+        return storageId;
+    }
+
+    public void setStorageId(long storageId) {
+        this.storageId = storageId;
     }
 
     public String getName() {
@@ -67,11 +74,11 @@ import android.arch.persistence.room.PrimaryKey;
         this.unit = unit;
     }
 
-    public String getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 
