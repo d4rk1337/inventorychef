@@ -19,6 +19,9 @@
         android:paddingStart="5dp"
         android:text="0"
         android:hint=""
+        android:singleLine="true"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionDone"
         android:inputType="number" />
 
     <TextView

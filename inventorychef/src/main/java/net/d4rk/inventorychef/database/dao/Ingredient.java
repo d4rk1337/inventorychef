@@ -26,7 +26,7 @@ import android.arch.persistence.room.PrimaryKey;
     private String unit;
 
     @ColumnInfo(name = "Amount")
-    private long amount = 0;
+    private int amount = 0;
 
     @ColumnInfo(name = "Deleted")
     private boolean deleted;
@@ -74,11 +74,11 @@ import android.arch.persistence.room.PrimaryKey;
         this.unit = unit;
     }
 
-    public long getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(long amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
