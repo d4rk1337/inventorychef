@@ -7,29 +7,20 @@ import android.arch.persistence.room.PrimaryKey;
 /**
  * Created by d4rk on 30/03/2018.
  */
-    @Entity(tableName = "Ingredient")
-    public class Ingredient {
+    @Entity(tableName = "Purchase")
+    public class Purchase {
 
     @PrimaryKey(autoGenerate = true)
     private long id;
 
-    @ColumnInfo(name = "StorageId")
-    private long storageId;
-
-    @ColumnInfo(name = "Name")
-    private String name;
-
-    @ColumnInfo(name = "Group")
-    private String group;
-
-    @ColumnInfo(name = "Unit")
-    private String unit;
+    @ColumnInfo(name = "IngredientID")
+    private long ingredientId;
 
     @ColumnInfo(name = "Amount")
-    private int amount = 0;
+    private int amount;
 
-    @ColumnInfo(name = "Priority")
-    private Integer priority;
+    @ColumnInfo(name = "PurchaseTimestamp")
+    private long purchaseTimestamp;
 
     @ColumnInfo(name = "Deleted")
     private boolean deleted;
@@ -45,36 +36,12 @@ import android.arch.persistence.room.PrimaryKey;
         this.id = id;
     }
 
-    public long getStorageId() {
-        return storageId;
+    public long getIngredientId() {
+        return ingredientId;
     }
 
-    public void setStorageId(long storageId) {
-        this.storageId = storageId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
+    public void setIngredientId(long ingredientId) {
+        this.ingredientId = ingredientId;
     }
 
     public int getAmount() {
@@ -85,12 +52,12 @@ import android.arch.persistence.room.PrimaryKey;
         this.amount = amount;
     }
 
-    public Integer getPriority() {
-        return priority;
+    public long getPurchaseTimestamp() {
+        return purchaseTimestamp;
     }
 
-    public void setPriority(Integer priority) {
-        this.priority = priority;
+    public void setPurchaseTimestamp(long purchaseTimestamp) {
+        this.purchaseTimestamp = purchaseTimestamp;
     }
 
     public boolean isDeleted() {

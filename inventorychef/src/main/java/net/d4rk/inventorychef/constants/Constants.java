@@ -1,0 +1,38 @@
+package net.d4rk.inventorychef.constants;
+
+public class Constants {
+    public static final String[] INGREDIENT_SUGGESTIONS = new String[] {
+            "Paprika",
+            "Karotten",
+            "Knoblauch",
+            "Zwiebel",
+            "Mais",
+            "Brokkoli",
+            "Maiskolben",
+            "Tomaten",
+            "Pilze",
+            "Kartoffel",
+            "Apfel",
+            "Trauben",
+            "Erdbeere",
+            "Himbeere",
+            "Banane",
+            "Kaffee",
+            "Mehl",
+            "Vollkornmehl",
+            "Haselnüsse",
+            "Mandeln",
+            "gem. Haselnüsse",
+            "gem. Mandeln",
+            "Zucker",
+            "Vanillezucker",
+            "Quark",
+            "Butter",
+            "ges. Butter",
+            "Käseaufschnitt",
+            "ger. Käse",
+            "herzh. Käse",
+            "Frischkäse",
+            "Milch",
+            "Müsli",};
+}

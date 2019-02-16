@@ -28,6 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
-        android:src="@drawable/sharp_check_black_24" />
+        android:src="@drawable/sharp_add_24" />
 
 </android.support.design.widget.CoordinatorLayout>

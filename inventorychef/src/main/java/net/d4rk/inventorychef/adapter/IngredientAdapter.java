@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,14 +21,19 @@ import android.widget.TextView;
 
 import net.d4rk.inventorychef.R;
 import net.d4rk.inventorychef.database.dao.Ingredient;
+import net.d4rk.inventorychef.database.dao.Purchase;
 import net.d4rk.inventorychef.database.room.AppDatabase;
 import net.d4rk.inventorychef.util.DatabaseInitializer;
+
+import org.joda.time.DateTime;
 
 import java.util.Collections;
 import java.util.List;
 
 public class IngredientAdapter
         extends RecyclerView.Adapter<IngredientAdapter.IngredientHolder> {
+
+    private static final String TAG = IngredientAdapter.class.getSimpleName();
 
     class IngredientHolder
             extends RecyclerView.ViewHolder {
@@ -73,15 +79,34 @@ public class IngredientAdapter
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+                    int previousAmount = current.getAmount();
 
-                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    }
+                    try {
+                        current.setAmount(Integer.parseInt(v.getText().toString()));
 
-                    if (holder.amountBar.getVisibility() == View.VISIBLE) {
-                        holder.amountBar.setVisibility(View.GONE);
+                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+
+                        int amountDifference = current.getAmount() - previousAmount;
+
+                        if (amountDifference > 0) {
+                            Purchase newPurchase = new Purchase();
+                            newPurchase.setIngredientId(current.getId());
+                            newPurchase.setAmount(amountDifference);
+                            newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
+
+                            DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
+                        }
+
+                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        }
+
+                        if (holder.amountBar.getVisibility() == View.VISIBLE) {
+                            holder.amountBar.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "(onEditorAction): amount update not valid");
                     }
                     return true;
                 }
@@ -90,42 +115,25 @@ public class IngredientAdapter
         });
 
         holder.amount.setOnLongClickListener(new View.OnLongClickListener() {
+
             @Override
             public boolean onLongClick(View view) {
-
                 holder.amountBar.setVisibility(View.VISIBLE);
-//                holder.amountBar.requestFocus();
-//                holder.amountBar.bringToFront();
-//                holder.amountBar.findFocus();
-//                holder.amountBar.performClick();
                 holder.amountBar.setProgress(current.getAmount());
-//
-//                long downTime = SystemClock.uptimeMillis();
-//                long eventTime = SystemClock.uptimeMillis() + 100;
-//                float x = 0.0f;
-//                float y = 0.0f;
-//// List of meta states found here:     developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-//                int metaState = 0;
-//                MotionEvent motionEvent = MotionEvent.obtain(
-//                        downTime,
-//                        eventTime,
-//                        MotionEvent.ACTION_MOVE,
-//                        x,
-//                        y,
-//                        metaState
-//                );
-//
-//// Dispatch touch event to view
-//                holder.amountBar.dispatchTouchEvent(motionEvent);
-//
+
                 if (holder.amount.isFocused()) {
                     holder.amount.clearFocus();
                 }
-//                holder.amountBar.requestFocusFromTouch();
 
                 holder.amountBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    int mPreviousAmount = 0;
+
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int amount, boolean b) {
+                        if (mPreviousAmount == 0) {
+                            mPreviousAmount = current.getAmount();
+                        }
+
                         holder.amount.setText(Integer.toString(amount));
                         current.setAmount(amount);
                     }
@@ -138,10 +146,23 @@ public class IngredientAdapter
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         seekBar.setVisibility(View.GONE);
-                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+
                         InputMethodManager imm = (InputMethodManager) seekBar.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                         if (imm != null) {
                             imm.hideSoftInputFromWindow(seekBar.getWindowToken(), 0);
+                        }
+
+                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+
+                        int amountDifference = current.getAmount() - mPreviousAmount;
+
+                        if (amountDifference > 0) {
+                            Purchase newPurchase = new Purchase();
+                            newPurchase.setIngredientId(current.getId());
+                            newPurchase.setAmount(amountDifference);
+                            newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
+
+                            DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
                         }
                     }
                 });
@@ -155,9 +176,14 @@ public class IngredientAdapter
             public void onClick(View view) {
                 current.setAmount(current.getAmount() + 1);
 
-//                notifyDataSetChanged();
-
                 DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+
+                Purchase newPurchase = new Purchase();
+                newPurchase.setIngredientId(current.getId());
+                newPurchase.setAmount(1);
+                newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
+
+                DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
             }
         });
     }

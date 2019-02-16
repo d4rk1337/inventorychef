@@ -22,6 +22,7 @@ import android.widget.EditText;
 
 import net.d4rk.inventorychef.R;
 import net.d4rk.inventorychef.adapter.IngredientAdapter;
+import net.d4rk.inventorychef.constants.Constants;
 import net.d4rk.inventorychef.database.dao.Ingredient;
 import net.d4rk.inventorychef.database.dao.IngredientViewModel;
 import net.d4rk.inventorychef.database.room.AppDatabase;
@@ -34,8 +35,6 @@ public class ActivityMain extends AppCompatActivity {
     private static final String TAG = ActivityMain.class.getName();
 
     private IngredientViewModel mIngredientViewModel;
-
-    private static final String[] INGREDIENT_SUGGESTIONS = new String[] { "Kartoffel", "Quark", "Milch", "Müsli", "Käseaufschnitt", "Frischkäse"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,7 @@ public class ActivityMain extends AppCompatActivity {
                     final View dialogView =inflater.inflate(R.layout.dialog_newingredient, null);
 
                     AutoCompleteTextView ingredientNameInput = dialogView.findViewById(R.id.dialog_newingredient_name);
-                    ArrayAdapter<String> ingredientNameAdapter = new ArrayAdapter<>(ActivityMain.this, android.R.layout.simple_list_item_1, INGREDIENT_SUGGESTIONS);
+                    ArrayAdapter<String> ingredientNameAdapter = new ArrayAdapter<>(ActivityMain.this, android.R.layout.simple_list_item_1, Constants.INGREDIENT_SUGGESTIONS);
                     ingredientNameInput.setAdapter(ingredientNameAdapter);
 
 

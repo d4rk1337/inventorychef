@@ -19,6 +19,12 @@ public interface IngredientDao {
     @Query("SELECT * FROM Ingredient")
     LiveData<List<Ingredient>> getAll();
 
+    @Query("SELECT * FROM Ingredient ORDER BY Priority DESC")
+    LiveData<List<Ingredient>> getAllSortByPriority();
+
+    @Query("SELECT * FROM Ingredient ORDER BY Priority DESC, Amount")
+    LiveData<List<Ingredient>> getAllSortByPriorityAmount();
+
     @Query("SELECT * FROM Ingredient where id LIKE :id")
     Ingredient findById(String id);
 
@@ -31,8 +37,15 @@ public interface IngredientDao {
     @Insert
     void insertAll(Ingredient... ingredients);
 
-    @Query("UPDATE Ingredient SET Amount = :amount WHERE id = :id")
-    void updateAmount(long id, long amount);
+//    @Query("UPDATE Ingredient SET Amount = :amount WHERE id = :id")
+//    void updateAmount(long id, long amount);
+
+    @Update
+    void updateIngredients(Ingredient... ingredients);
+
+
+    @Query("WITH AllPurchases AS (SELECT IngredientID, COUNT(id) AS PurchasesCount FROM Purchase GROUP BY IngredientID) UPDATE Ingredient SET Priority = (SELECT PurchasesCount FROM AllPurchases WHERE IngredientID = Ingredient.id)")
+    void updatePriorities();
 
     @Delete
     void delete(Ingredient ingredient);

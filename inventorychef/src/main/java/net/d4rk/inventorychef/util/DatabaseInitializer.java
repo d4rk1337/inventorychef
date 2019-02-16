@@ -10,18 +10,16 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import net.d4rk.inventorychef.database.dao.Ingredient;
+import net.d4rk.inventorychef.database.dao.Purchase;
 import net.d4rk.inventorychef.database.room.AppDatabase;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
 public class DatabaseInitializer {
 
     private static final String TAG = DatabaseInitializer.class.getName();
-
-    public static void populateAsync(@NonNull final AppDatabase db) {
-        PopulateDbAsync task = new PopulateDbAsync(db);
-        task.execute();
-    }
 
     public static void insertIngredientAsync(@NonNull final AppDatabase db,
                                              final String name) {
@@ -35,8 +33,10 @@ public class DatabaseInitializer {
         task.execute(ingredient);
     }
 
-    public static void populateSync(@NonNull final AppDatabase db) {
-        populateWithTestData(db);
+    public static void insertOrUpdatePurchase(@NonNull final AppDatabase db,
+                                              final Purchase purchase) {
+        PurchaseAsync task = new PurchaseAsync(db);
+        task.execute(purchase);
     }
 
     private static Ingredient addIngredient(final AppDatabase db,
@@ -45,41 +45,6 @@ public class DatabaseInitializer {
 
         db.ingredientDao().insertAll(ingredient);
         return ingredient;
-    }
-
-    private static void populateWithTestData(AppDatabase db) {
-        Ingredient ingredient = new Ingredient();
-        ingredient.setGroup("Gemüse");
-        ingredient.setName("Kartoffel");
-        ingredient.setUnit("kg");
-
-        Log.d(TAG, "(populateWithTestData): ingredient created");
-
-        addIngredient(db, ingredient);
-
-        Log.d(TAG, "(populateWithTestData): ingredient added to list");
-
-//        LiveData<List<Ingredient>> ingredientList = db.ingredientDao().getAll();
-//
-//        Log.d(TAG, "(populateWithTestData): Rows Count: " + ingredientList.getValue().size());
-    }
-
-    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-
-        private final AppDatabase mDb;
-
-        PopulateDbAsync(AppDatabase db) {
-            mDb = db;
-        }
-
-        @Override
-        protected Void doInBackground(final Void... params) {
-            Log.d(TAG, "(doInBackground): create test data in background");
-
-            populateWithTestData(mDb);
-            return null;
-        }
-
     }
 
     private static class IngredientInsertAsync extends AsyncTask<String, Void, Void> {
@@ -127,9 +92,52 @@ public class DatabaseInitializer {
 
             Log.d(TAG, "(doInBackground): update test data amount in background");
 
-            Ingredient ingredient = ingredients[0];
+//            Ingredient ingredient = ingredients[0];
 
-            mDb.ingredientDao().updateAmount(ingredient.getId(), ingredient.getAmount());
+//            mDb.ingredientDao().updateAmount(ingredient.getId(), ingredient.getAmount());
+            mDb.ingredientDao().updateIngredients(ingredients);
+
+            return null;
+        }
+
+    }
+
+    private static class PurchaseAsync extends AsyncTask<Purchase, Void, Void> {
+
+        private final AppDatabase mDb;
+
+        PurchaseAsync(AppDatabase db) {
+            mDb = db;
+        }
+
+        @Override
+        protected Void doInBackground(final Purchase... purchases) {
+            if(android.os.Debug.isDebuggerConnected())
+                android.os.Debug.waitForDebugger();
+
+            Log.d(TAG, "(doInBackground): insert or update last purchase for ingredient");
+
+            Purchase purchase = purchases[0];
+            Purchase duplicate = null;
+
+            DateTime purchaseTimestamp = new DateTime(purchase.getPurchaseTimestamp());
+            DateTime purchaseStartTimestamp = purchaseTimestamp.minusDays(1);
+
+            List<Purchase> duplicates = mDb.purchaseDao().findByIngredientIdPurchaseIntervalSortByPurchaseTimestamp(purchase.getIngredientId(), purchaseStartTimestamp.getMillis(), purchaseTimestamp.getMillis());
+
+            switch (duplicates.size()) {
+                case 0:
+                    mDb.purchaseDao().insertAll(purchase);
+                    break;
+
+                default:
+                    duplicate = duplicates.get(0);
+
+                    mDb.purchaseDao().updateAmount(duplicate.getId(), purchase.getAmount());
+            }
+
+            mDb.ingredientDao().updatePriorities();
+
             return null;
         }
 

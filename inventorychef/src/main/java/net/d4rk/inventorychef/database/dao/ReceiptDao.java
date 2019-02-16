@@ -20,15 +20,12 @@ public interface ReceiptDao {
     @Query("SELECT * FROM Receipt WHERE Name LIKE :name")
     List<Receipt> findByName(String name);
 
-    @Query("SELECT r.* FROM Receipt r INNER JOIN Ingredient i ON WHERE Name LIKE :name")
-    List<Receipt> findByIngredient(String ingredient);
-
-    @Query("SELECT COUNT(*) from Ingredient")
-    int countIngredients();
+    @Query("SELECT COUNT(*) from Receipt")
+    int countReceipts();
 
     @Insert
-    void insertAll(Ingredient... ingredients);
+    void insertAll(Receipt... receipts);
 
     @Delete
-    void delete(Ingredient ingredient);
+    void delete(Receipt receipt);
 }

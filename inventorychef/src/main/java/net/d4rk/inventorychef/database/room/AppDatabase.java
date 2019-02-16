@@ -8,12 +8,20 @@ import android.util.Log;
 
 import net.d4rk.inventorychef.database.dao.Ingredient;
 import net.d4rk.inventorychef.database.dao.IngredientDao;
+import net.d4rk.inventorychef.database.dao.Purchase;
+import net.d4rk.inventorychef.database.dao.PurchaseDao;
 
 /**
  * Created by d4rk on 30/03/2018.
  */
 
-@Database(entities = {Ingredient.class}, version = 1, exportSchema = false)
+@Database(
+        entities = {
+            Ingredient.class,
+            Purchase.class
+        },
+        version = 1,
+        exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String TAG = AppDatabase.class.getSimpleName();
@@ -21,6 +29,8 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
     public abstract IngredientDao ingredientDao();
+
+    public abstract PurchaseDao purchaseDao();
 
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
