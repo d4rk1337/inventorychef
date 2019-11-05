@@ -1,11 +1,8 @@
 package net.d4rk.inventorychef.activities;
 
 import android.app.Dialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,14 +17,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import net.d4rk.inventorychef.R;
-import net.d4rk.inventorychef.adapter.IngredientAdapter;
 import net.d4rk.inventorychef.constants.Constants;
 import net.d4rk.inventorychef.database.dao.Ingredient;
 import net.d4rk.inventorychef.database.dao.IngredientViewModel;
 import net.d4rk.inventorychef.database.dao.StoragePlace;
 import net.d4rk.inventorychef.database.room.AppDatabase;
-import net.d4rk.inventorychef.inventory.InventoryAdapter_StoragePlace_IngredientList;
-import net.d4rk.inventorychef.inventory.model.Inventory_StoragePlace_IngredientList;
+import net.d4rk.inventorychef.inventory.expandablelistview.storageplaceingredientlist.adapter.InventoryAdapter;
+import net.d4rk.inventorychef.inventory.expandablelistview.storageplaceingredientlist.model.Inventory;
 import net.d4rk.inventorychef.util.DatabaseInitializer;
 
 import java.util.ArrayList;
@@ -66,24 +62,60 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void initList() {
+        List<Inventory> inventory = new ArrayList<>();
+
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final IngredientAdapter adapter = new IngredientAdapter(this);
-        recyclerView.setAdapter(adapter);
+
+        InventoryAdapter inventoryAdapter = new InventoryAdapter(inventory);
+
+        recyclerView.setAdapter(inventoryAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Get a new or existing ViewModel from the ViewModelProvider.
-        mIngredientViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
 
-        // Add an observer on the LiveData returned by getAlphabetizedWords.
-        // The onChanged() method fires when the observed data changes and the activity is
-        // in the foreground.
-        mIngredientViewModel.getAllIngredients().observe(this, new Observer<List<Ingredient>>() {
-            @Override
-            public void onChanged(@Nullable final List<Ingredient> ingredients) {
-                // Update the cached copy of the words in the adapter.
-                adapter.setIngredients(ingredients);
-            }
-        });
+        StoragePlace storageItem = new StoragePlace();
+        storageItem.setId(1);
+        storageItem.setName("Küche");
+
+        List<Ingredient> ingredientList = new ArrayList<Ingredient>();
+
+        Ingredient ingredientItem = new Ingredient();
+        ingredientItem.setId(2);
+        ingredientItem.setName("Reis");
+        ingredientItem.setStorageId(1);
+        ingredientItem.setAmount(1);
+
+        ingredientList.add(ingredientItem);
+
+        Inventory inventoryItem = new Inventory(storageItem, ingredientList);
+
+        inventory.add(inventoryItem);
+
+//        InventoryAdapter inventoryAdapter = new InventoryAdapter(inventory);
+//
+//        recyclerView.setAdapter(inventoryAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        inventoryAdapter.notifyDataSetChanged();
+
+//        final IngredientAdapter adapter = new IngredientAdapter(this);
+//
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//
+//        // Get a new or existing ViewModel from the ViewModelProvider.
+//        mIngredientViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
+//
+//        // Add an observer on the LiveData returned by getAlphabetizedWords.
+//        // The onChanged() method fires when the observed data changes and the activity is
+//        // in the foreground.
+//        mIngredientViewModel.getAllIngredients().observe(this, new Observer<List<Ingredient>>() {
+//            @Override
+//            public void onChanged(@Nullable final List<Ingredient> ingredients) {
+//                // Update the cached copy of the words in the adapter.
+//                adapter.setIngredients(ingredients);
+//            }
+//        });
     }
 
     private void initFloatingButton() {
