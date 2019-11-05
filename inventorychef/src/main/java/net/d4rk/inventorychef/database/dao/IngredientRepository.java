@@ -14,6 +14,7 @@ public class IngredientRepository {
 
     IngredientRepository(Application application) {
         AppDatabase db = AppDatabase.getAppDatabase(application);
+
         mIngredientDao = db.ingredientDao();
         mAllIngredients = mIngredientDao.getAllSortByPriorityAmount();
     }

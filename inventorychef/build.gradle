@@ -42,5 +42,5 @@ dependencies {
     api "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 
-    api 'joda-time:joda-time:2.7'
+    api 'joda-time:joda-time:2.9.9'
 }

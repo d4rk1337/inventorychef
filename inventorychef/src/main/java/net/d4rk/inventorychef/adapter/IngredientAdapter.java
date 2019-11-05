@@ -35,62 +35,51 @@ public class IngredientAdapter
 
     private static final String TAG = IngredientAdapter.class.getSimpleName();
 
-    class IngredientHolder
-            extends RecyclerView.ViewHolder {
-
-        private final EditText amount;
-        private final TextView name;
-        private final ImageButton increaseAmount;
-        private final SeekBar amountBar;
-
-        private IngredientHolder(View rowIngredient) {
-            super(rowIngredient);
-
-            this.amount = rowIngredient.findViewById(R.id.ingredient_amount);
-            this.name = rowIngredient.findViewById(R.id.ingredient_name);
-            this.increaseAmount = rowIngredient.findViewById(R.id.ingredient_increaseamount);
-            this.amountBar = rowIngredient.findViewById(R.id.ingredient_amountbar);
-        }
-    }
-
     private final LayoutInflater mInflater;
     private List<Ingredient> mIngredients = Collections.emptyList(); // Cached copy of words
 
-    public IngredientAdapter(Context context) {
+    public IngredientAdapter(
+            Context context
+    ) {
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public IngredientHolder onCreateViewHolder(ViewGroup parent,
-                                               int viewType) {
+    public IngredientHolder onCreateViewHolder(
+            ViewGroup parent,
+            int viewType
+    ) {
         View itemView = mInflater.inflate(R.layout.row_ingredients, parent, false);
+
         return new IngredientHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final IngredientHolder holder,
-                                 int position) {
-        final Ingredient current = mIngredients.get(position);
+    public void onBindViewHolder(
+            final IngredientHolder holder,
+            int position
+    ) {
+        final Ingredient currentIngredient = mIngredients.get(position);
 
-        holder.amount.setText(String.valueOf(current.getAmount()));
-        holder.name.setText(current.getName());
+        holder.amount.setText(String.valueOf(currentIngredient.getAmount()));
+        holder.name.setText(currentIngredient.getName());
 
         holder.amount.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    int previousAmount = current.getAmount();
+                    int previousAmount = currentIngredient.getAmount();
 
                     try {
-                        current.setAmount(Integer.parseInt(v.getText().toString()));
+                        currentIngredient.setAmount(Integer.parseInt(v.getText().toString()));
 
-                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
 
-                        int amountDifference = current.getAmount() - previousAmount;
+                        int amountDifference = currentIngredient.getAmount() - previousAmount;
 
                         if (amountDifference > 0) {
                             Purchase newPurchase = new Purchase();
-                            newPurchase.setIngredientId(current.getId());
+                            newPurchase.setIngredientId(currentIngredient.getId());
                             newPurchase.setAmount(amountDifference);
                             newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
 
@@ -119,7 +108,7 @@ public class IngredientAdapter
             @Override
             public boolean onLongClick(View view) {
                 holder.amountBar.setVisibility(View.VISIBLE);
-                holder.amountBar.setProgress(current.getAmount());
+                holder.amountBar.setProgress(currentIngredient.getAmount());
 
                 if (holder.amount.isFocused()) {
                     holder.amount.clearFocus();
@@ -129,13 +118,17 @@ public class IngredientAdapter
                     int mPreviousAmount = 0;
 
                     @Override
-                    public void onProgressChanged(SeekBar seekBar, int amount, boolean b) {
+                    public void onProgressChanged(
+                            SeekBar seekBar,
+                            int amountProgress,
+                            boolean fromUser
+                    ) {
                         if (mPreviousAmount == 0) {
-                            mPreviousAmount = current.getAmount();
+                            mPreviousAmount = currentIngredient.getAmount();
                         }
 
-                        holder.amount.setText(Integer.toString(amount));
-                        current.setAmount(amount);
+                        holder.amount.setText(String.valueOf(amountProgress));
+                        currentIngredient.setAmount(amountProgress);
                     }
 
                     @Override
@@ -144,7 +137,9 @@ public class IngredientAdapter
                     }
 
                     @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    public void onStopTrackingTouch(
+                            SeekBar seekBar
+                    ) {
                         seekBar.setVisibility(View.GONE);
 
                         InputMethodManager imm = (InputMethodManager) seekBar.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -152,13 +147,14 @@ public class IngredientAdapter
                             imm.hideSoftInputFromWindow(seekBar.getWindowToken(), 0);
                         }
 
-                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
 
-                        int amountDifference = current.getAmount() - mPreviousAmount;
+                        int amountDifference = currentIngredient.getAmount() - mPreviousAmount;
 
                         if (amountDifference > 0) {
                             Purchase newPurchase = new Purchase();
-                            newPurchase.setIngredientId(current.getId());
+
+                            newPurchase.setIngredientId(currentIngredient.getId());
                             newPurchase.setAmount(amountDifference);
                             newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
 
@@ -174,12 +170,12 @@ public class IngredientAdapter
         holder.increaseAmount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                current.setAmount(current.getAmount() + 1);
+                currentIngredient.setAmount(currentIngredient.getAmount() + 1);
 
-                DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), current);
+                DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
 
                 Purchase newPurchase = new Purchase();
-                newPurchase.setIngredientId(current.getId());
+                newPurchase.setIngredientId(currentIngredient.getId());
                 newPurchase.setAmount(1);
                 newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
 
@@ -188,7 +184,9 @@ public class IngredientAdapter
         });
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(
+            List<Ingredient> ingredients
+    ) {
         mIngredients = ingredients;
 
         notifyDataSetChanged();
@@ -197,5 +195,25 @@ public class IngredientAdapter
     @Override
     public int getItemCount() {
         return mIngredients.size();
+    }
+
+    class IngredientHolder
+            extends RecyclerView.ViewHolder {
+
+        private final EditText amount;
+        private final TextView name;
+        private final ImageButton increaseAmount;
+        private final SeekBar amountBar;
+
+        private IngredientHolder(
+                View rowIngredient
+        ) {
+            super(rowIngredient);
+
+            this.amount = rowIngredient.findViewById(R.id.ingredient_amount);
+            this.name = rowIngredient.findViewById(R.id.ingredient_name);
+            this.increaseAmount = rowIngredient.findViewById(R.id.ingredient_increaseamount);
+            this.amountBar = rowIngredient.findViewById(R.id.ingredient_amountbar);
+        }
     }
 }

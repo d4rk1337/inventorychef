@@ -6,7 +6,8 @@ import android.arch.lifecycle.LiveData;
 
 import java.util.List;
 
-public class IngredientViewModel extends AndroidViewModel {
+public class IngredientViewModel
+        extends AndroidViewModel {
 
     private IngredientRepository mIngredientRepository;
 
@@ -14,6 +15,7 @@ public class IngredientViewModel extends AndroidViewModel {
 
     public IngredientViewModel(Application application) {
         super(application);
+
         mIngredientRepository = new IngredientRepository(application);
         mAllIngredients = mIngredientRepository.getAllIngredients();
     }
