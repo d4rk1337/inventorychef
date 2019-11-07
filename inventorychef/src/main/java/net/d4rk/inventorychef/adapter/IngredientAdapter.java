@@ -73,7 +73,7 @@ public class IngredientAdapter
                     try {
                         currentIngredient.setAmount(Integer.parseInt(v.getText().toString()));
 
-                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
+//                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
 
                         int amountDifference = currentIngredient.getAmount() - previousAmount;
 
@@ -83,7 +83,7 @@ public class IngredientAdapter
                             newPurchase.setAmount(amountDifference);
                             newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
 
-                            DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
+//                            DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
                         }
 
                         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -147,7 +147,7 @@ public class IngredientAdapter
                             imm.hideSoftInputFromWindow(seekBar.getWindowToken(), 0);
                         }
 
-                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
+//                        DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
 
                         int amountDifference = currentIngredient.getAmount() - mPreviousAmount;
 
@@ -158,7 +158,7 @@ public class IngredientAdapter
                             newPurchase.setAmount(amountDifference);
                             newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
 
-                            DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
+//                            DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
                         }
                     }
                 });
@@ -172,14 +172,14 @@ public class IngredientAdapter
             public void onClick(View view) {
                 currentIngredient.setAmount(currentIngredient.getAmount() + 1);
 
-                DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
+//                DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(holder.amount.getContext()), currentIngredient);
 
                 Purchase newPurchase = new Purchase();
                 newPurchase.setIngredientId(currentIngredient.getId());
                 newPurchase.setAmount(1);
                 newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
 
-                DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
+//                DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(holder.amount.getContext()), newPurchase);
             }
         });
     }

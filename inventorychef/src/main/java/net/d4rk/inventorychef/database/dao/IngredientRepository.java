@@ -15,8 +15,8 @@ public class IngredientRepository {
     IngredientRepository(Application application) {
         AppDatabase db = AppDatabase.getAppDatabase(application);
 
-        mIngredientDao = db.ingredientDao();
-        mAllIngredients = mIngredientDao.getAllSortByPriorityAmount();
+//        mIngredientDao = db.ingredientDao_Old();
+//        mAllIngredients = mIngredientDao.getAllSortByPriorityAmount();
     }
 
     // Room executes all queries on a separate thread.

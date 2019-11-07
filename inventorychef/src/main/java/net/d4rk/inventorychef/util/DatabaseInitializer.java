@@ -9,9 +9,12 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import net.d4rk.inventorychef.database.dao.Ingredient;
-import net.d4rk.inventorychef.database.dao.Purchase;
+//import net.d4rk.inventorychef.database.dao.Ingredient;
+//import net.d4rk.inventorychef.database.dao.Purchase;
 import net.d4rk.inventorychef.database.room.AppDatabase;
+import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.Ingredient;
+import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.Purchase;
+import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.StoragePlace;
 
 import org.joda.time.DateTime;
 
@@ -39,11 +42,27 @@ public class DatabaseInitializer {
         task.execute(purchase);
     }
 
+    private static StoragePlace addStoragePlace(
+            final AppDatabase db,
+            StoragePlace storagePlace
+    ) {
+        Log.d(TAG, "(addStoragePlace): insert storage place to database");
+
+        long storageId = db.storagePlaceDao().insert(storagePlace);
+
+        storagePlace.setId(storageId);
+
+        return storagePlace;
+    }
+
     private static Ingredient addIngredient(final AppDatabase db,
                                             Ingredient ingredient) {
         Log.d(TAG, "(addIngredient): insert ingredient to database");
 
-        db.ingredientDao().insertAll(ingredient);
+        long ingredientId = db.ingredientDao().insert(ingredient);
+
+        ingredient.setId(ingredientId);
+
         return ingredient;
     }
 
@@ -62,14 +81,20 @@ public class DatabaseInitializer {
 
             Log.d(TAG, "(doInBackground): insert test data amount in background");
 
+            StoragePlace storagePlace = new StoragePlace();
+            storagePlace.setName("Test");
+
+            storagePlace = addStoragePlace(mDb, storagePlace);
+
             Ingredient ingredient = new Ingredient();
+            ingredient.setStorageId(storagePlace.getId());
             ingredient.setGroup("");
             ingredient.setName(names[0]);
             ingredient.setUnit("");
 
             Log.d(TAG, "(populateWithTestData): ingredient created");
 
-            addIngredient(mDb, ingredient);
+            ingredient = addIngredient(mDb, ingredient);
 
             Log.d(TAG, "(populateWithTestData): ingredient added to list");
             return null;
