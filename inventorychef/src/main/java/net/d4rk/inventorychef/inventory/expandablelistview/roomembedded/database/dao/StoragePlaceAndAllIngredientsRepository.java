@@ -16,7 +16,8 @@ public class StoragePlaceAndAllIngredientsRepository {
         AppDatabase db = AppDatabase.getAppDatabase(application);
 
         mStoragePlaceDao = db.storagePlaceDao();
-        mAllStoragePlacesAndIngredients = mStoragePlaceDao.getAllStoragePlacesAndIngredients();
+//        mAllStoragePlacesAndIngredients = mStoragePlaceDao.getAllStoragePlacesAndIngredients();
+        mAllStoragePlacesAndIngredients = mStoragePlaceDao.getAllActiveStoragePlacesAndIngredients();
     }
 
     // Room executes all queries on a separate thread.

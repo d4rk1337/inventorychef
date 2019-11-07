@@ -18,6 +18,9 @@ public interface StoragePlaceDao {
     @Query("SELECT * FROM StoragePlace")
     LiveData<List<StoragePlaceAndAllIngredients>> getAllStoragePlacesAndIngredients();
 
+    @Query("SELECT * FROM StoragePlace INNER JOIN Ingredient ON StoragePlace.id = Ingredient.storageId WHERE Ingredient.deleted = 0")
+    LiveData<List<StoragePlaceAndAllIngredients>> getAllActiveStoragePlacesAndIngredients();
+
     @Insert
     long insert(StoragePlace storagePlace);
 

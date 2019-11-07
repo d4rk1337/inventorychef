@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 /**
  * Created by d4rk on 30/03/2018.
@@ -24,7 +25,8 @@ import android.arch.persistence.room.PrimaryKey;
     private String unit;
     private int amount = 0;
     private Integer priority;
-    private boolean deleted;
+    @NonNull
+    private boolean deleted = false;
     private long deleteTimestamp;
 
     public long getId() {

@@ -4,12 +4,15 @@ import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,22 +27,21 @@ import android.widget.EditText;
 
 import net.d4rk.inventorychef.R;
 import net.d4rk.inventorychef.constants.Constants;
-import net.d4rk.inventorychef.database.dao.Ingredient;
-//import net.d4rk.inventorychef.database.dao.IngredientViewModel;
-import net.d4rk.inventorychef.database.dao.StoragePlace;
 import net.d4rk.inventorychef.database.room.AppDatabase;
+import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.RecyclerItemTouchHelper;
+import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.adapter.ExpandableInventoryAdapter;
 import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.adapter.StoragePlaceAndIngredientAdapter;
+import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.Ingredient;
 import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.StoragePlaceAndAllIngredients;
 import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.StoragePlaceAndAllIngredientsViewModel;
-import net.d4rk.inventorychef.inventory.expandablelistview.storageplaceingredientlist.adapter.InventoryAdapter;
-import net.d4rk.inventorychef.inventory.expandablelistview.storageplaceingredientlist.model.Inventory;
 import net.d4rk.inventorychef.inventory.expandablelistview.storageplaceingredientlist.unused.IngredientViewModel;
 import net.d4rk.inventorychef.util.DatabaseInitializer;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityMain extends AppCompatActivity {
+public class ActivityMain
+        extends AppCompatActivity
+        implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     private static final String TAG = ActivityMain.class.getName();
 
@@ -119,6 +121,14 @@ public class ActivityMain extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Swipe addons
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
+
         // Get a new or existing ViewModel from the ViewModelProvider.
         mStoragePlaceAndAllIngredientsViewModel = ViewModelProviders.of(this).get(StoragePlaceAndAllIngredientsViewModel.class);
 
@@ -194,5 +204,46 @@ public class ActivityMain extends AppCompatActivity {
                 dialog.show();
             }
         });
+    }
+
+    @Override
+    public void onSwiped(
+            RecyclerView.ViewHolder viewHolder,
+            int direction,
+            int position
+    ) {
+        if (viewHolder instanceof ExpandableInventoryAdapter.IngredientViewHolder) {
+            ExpandableInventoryAdapter.IngredientViewHolder convertedViewModel = (ExpandableInventoryAdapter.IngredientViewHolder) viewHolder;
+
+            int viewHolderAdapterPosition = viewHolder.getAdapterPosition();
+
+            final Ingredient swipedIngredient = (Ingredient) convertedViewModel.itemView.getTag();
+
+            // get the removed item name to display it in snack bar
+            String name = swipedIngredient.getName();
+
+            // backup of removed item for undo purpose
+            final int swipedIndex = viewHolder.getAdapterPosition();
+
+            // remove the item from recycler view
+//            mAdapter.removeItem(viewHolder.getAdapterPosition());
+
+            DatabaseInitializer.deleteIngredientsAsync(AppDatabase.getAppDatabase(ActivityMain.this), swipedIngredient);
+
+            // showing snack bar with Undo option
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.coordinator_layout), name + " removed from inventory!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // undo is selected, restore the deleted item
+//                    mAdapter.restoreItem(deletedItem, deletedIndex);
+                    DatabaseInitializer.reactivateIngredientsAsync(AppDatabase.getAppDatabase(ActivityMain.this), swipedIngredient);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+        }
     }
 }

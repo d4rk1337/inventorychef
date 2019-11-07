@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -61,7 +62,8 @@ public abstract class ExpandableInventoryAdapter<
                 View inventoryView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_storageplaces, parent, false);
                 return new StorageViewHolder(inventoryView);
             case TYPE_INGREDIENT:
-                View ingredientView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ingredients, parent, false);
+//                View ingredientView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ingredients, parent, false);
+                View ingredientView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ingredients_swipe, parent, false);
                 return new IngredientViewHolder(ingredientView);
             default:
                 throw new IllegalArgumentException("Given viewType is not valid");
@@ -73,13 +75,6 @@ public abstract class ExpandableInventoryAdapter<
             @NonNull RecyclerView.ViewHolder viewHolder,
             int position
     ) {
-//        int currentPosition = 0;
-//
-//        if (position > 0) {
-//            for (Inventory inventoryItem : mInventory) {
-//
-//            }
-//        }
         switch (getItemViewType(position)) {
             case TYPE_STORAGE:
                 StoragePlace currentStoragePlace = mStoragePlacesAndIngredients.get(mGroupIndexList.get(position)).getStoragePlace();
@@ -92,8 +87,6 @@ public abstract class ExpandableInventoryAdapter<
 
                 ingredientViewHolder.itemView.setTag(currentIngredient);
                 ingredientViewHolder.initialize();
-
-//                ingredientViewHolder.setIngredientName(currentIngredient.getName());
                 break;
         }
     }
@@ -138,8 +131,10 @@ public abstract class ExpandableInventoryAdapter<
 
     }
 
-    class IngredientViewHolder
+    public class IngredientViewHolder
             extends RecyclerView.ViewHolder {
+
+        public RelativeLayout viewBackground, viewForeground;
 
         EditText mAmount;
         TextView mName;
@@ -148,6 +143,9 @@ public abstract class ExpandableInventoryAdapter<
 
         IngredientViewHolder(View itemView) {
             super(itemView);
+
+            this.viewBackground = itemView.findViewById(R.id.ingredient_background);
+            this.viewForeground = itemView.findViewById(R.id.ingredient_foreground);
 
             this.mAmount = itemView.findViewById(R.id.ingredient_amount);
             this.mName = itemView.findViewById(R.id.ingredient_name);

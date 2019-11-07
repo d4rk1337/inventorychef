@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/ingredient_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fa315b">
+
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@android:drawable/ic_delete" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/delete_icon"
+            android:text="DELETE"
+            android:textColor="#fff"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+<RelativeLayout
+    android:id="@+id/ingredient_foreground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="#ffffff">
+
+    <EditText
+        android:id="@+id/ingredient_amount"
+        android:layout_width="@dimen/row_ingredients_input_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:textSize="@dimen/row_ingredients_text_size"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:text="0"
+        android:hint=""
+        android:singleLine="true"
+        android:selectAllOnFocus="true"
+        android:imeOptions="actionDone"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/ingredient_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/ingredient_amount"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/row_ingredients_text_size"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:text="Test" />
+
+    <ImageButton
+        android:id="@+id/ingredient_increaseamount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:contentDescription="@string/row_ingredients_addbutton" />
+
+    <SeekBar
+        android:id="@+id/ingredient_amountbar"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="-250dp"
+        android:layout_toStartOf="@+id/ingredient_name"
+        android:visibility="gone"/>
+</RelativeLayout>
+</FrameLayout>

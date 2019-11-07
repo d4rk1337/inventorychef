@@ -44,6 +44,9 @@ public interface IngredientDao {
 //    void updateAmount(long id, long amount);
 
     @Update
+    void updateIngredient(Ingredient ingredient);
+
+    @Update
     void updateIngredients(Ingredient... ingredients);
 
 

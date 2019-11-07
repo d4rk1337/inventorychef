@@ -30,6 +30,18 @@ public class DatabaseInitializer {
         task.execute(name);
     }
 
+    public static void deleteIngredientsAsync(@NonNull final AppDatabase db,
+                                              final Ingredient... ingredients) {
+        IngredientDeleteAsync task = new IngredientDeleteAsync(db);
+        task.execute(ingredients);
+    }
+
+    public static void reactivateIngredientsAsync(@NonNull final AppDatabase db,
+                                              final Ingredient... ingredients) {
+        IngredientReactivateAsync task = new IngredientReactivateAsync(db);
+        task.execute(ingredients);
+    }
+
     public static void updateAmountAsync(@NonNull final AppDatabase db,
                                          final Ingredient ingredient) {
         IngredientAmountUpdateAsync task = new IngredientAmountUpdateAsync(db);
@@ -97,6 +109,63 @@ public class DatabaseInitializer {
             ingredient = addIngredient(mDb, ingredient);
 
             Log.d(TAG, "(populateWithTestData): ingredient added to list");
+            return null;
+        }
+
+    }
+
+    private static class IngredientDeleteAsync extends AsyncTask<Ingredient, Void, Void> {
+
+        private final AppDatabase mDb;
+
+        IngredientDeleteAsync(AppDatabase db) {
+            mDb = db;
+        }
+
+        @Override
+        protected Void doInBackground(final Ingredient... ingredients) {
+            if(android.os.Debug.isDebuggerConnected())
+                android.os.Debug.waitForDebugger();
+
+            Log.d(TAG, "(doInBackground): set ingredient deleted in background");
+
+            for (Ingredient currentIngredient : ingredients) {
+                currentIngredient.setDeleted(true);
+                currentIngredient.setDeleteTimestamp(new DateTime().getMillis());
+
+                mDb.ingredientDao().updateIngredient(currentIngredient);
+
+                Log.d(TAG, "(doInBackground): ingredient set deleted");
+            }
+
+            return null;
+        }
+
+    }
+
+    private static class IngredientReactivateAsync extends AsyncTask<Ingredient, Void, Void> {
+
+        private final AppDatabase mDb;
+
+        IngredientReactivateAsync(AppDatabase db) {
+            mDb = db;
+        }
+
+        @Override
+        protected Void doInBackground(final Ingredient... ingredients) {
+            if(android.os.Debug.isDebuggerConnected())
+                android.os.Debug.waitForDebugger();
+
+            Log.d(TAG, "(doInBackground): set ingredient reactivated in background");
+
+            for (Ingredient currentIngredient : ingredients) {
+                currentIngredient.setDeleted(false);
+
+                mDb.ingredientDao().updateIngredient(currentIngredient);
+
+                Log.d(TAG, "(doInBackground): ingredient reactivated");
+            }
+
             return null;
         }
 
