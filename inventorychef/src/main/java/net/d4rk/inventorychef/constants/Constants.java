@@ -251,8 +251,12 @@ public class Constants {
 
     public static final String[] LOCATION_SUGGESTIONS = {
             "Küche",
+            "Küchenschrank",
             "Kühlschrank",
+            "Kühltruhe",
+            "Gefrierschrank",
             "Vorratskammer",
-            "Arbeitsfläche"
+            "Arbeitsfläche",
+            "Keller"
     };
 }

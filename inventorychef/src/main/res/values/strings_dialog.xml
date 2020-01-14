@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dialog_newingredient_name">Ingredient name</string>
-    <string name="dialog_newingredient_group">Ingredient group</string>
+    <string name="dialog_newingredient_storageplace">Storage place</string>
+    <string name="dialog_newingredient_newstorageplace">New storage place</string>
+
+    <string name="dialog_newingredient_error_name">No ingredient name found</string>
+    <string name="dialog_newingredient_error_storageplace">No storage place selected</string>
+    <string name="dialog_newingredient_error_newstorageplace">No storage place name found</string>
+    <string name="dialog_newingredient_error_newstorageplace_taken">Storage place already defined</string>
 </resources>

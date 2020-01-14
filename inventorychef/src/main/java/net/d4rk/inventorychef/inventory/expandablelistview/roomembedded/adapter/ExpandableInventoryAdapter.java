@@ -170,16 +170,16 @@ public abstract class ExpandableInventoryAdapter<
 
                             DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(mAmount.getContext()), (Ingredient) itemView.getTag());
 
-                            int amountDifference = ((Ingredient) itemView.getTag()).getAmount() - previousAmount;
-
-                            if (amountDifference > 0) {
-                                Purchase newPurchase = new Purchase();
-                                newPurchase.setIngredientId(((Ingredient) itemView.getTag()).getId());
-                                newPurchase.setAmount(amountDifference);
-                                newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
-
-                                DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(mAmount.getContext()), newPurchase);
-                            }
+//                            int amountDifference = ((Ingredient) itemView.getTag()).getAmount() - previousAmount;
+//
+//                            if (amountDifference > 0) {
+//                                Purchase newPurchase = new Purchase();
+//                                newPurchase.setIngredientId(((Ingredient) itemView.getTag()).getId());
+//                                newPurchase.setAmount(amountDifference);
+//                                newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
+//
+//                                DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(mAmount.getContext()), newPurchase);
+//                            }
 
                             InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                             if (imm != null) {
@@ -244,17 +244,17 @@ public abstract class ExpandableInventoryAdapter<
 
                             DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(mAmount.getContext()), (Ingredient) itemView.getTag());
 
-                            int amountDifference = ((Ingredient) itemView.getTag()).getAmount() - mPreviousAmount;
-
-                            if (amountDifference > 0) {
-                                Purchase newPurchase = new Purchase();
-
-                                newPurchase.setIngredientId(((Ingredient) itemView.getTag()).getId());
-                                newPurchase.setAmount(amountDifference);
-                                newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
-
-                                DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(mAmount.getContext()), newPurchase);
-                            }
+//                            int amountDifference = ((Ingredient) itemView.getTag()).getAmount() - mPreviousAmount;
+//
+//                            if (amountDifference > 0) {
+//                                Purchase newPurchase = new Purchase();
+//
+//                                newPurchase.setIngredientId(((Ingredient) itemView.getTag()).getId());
+//                                newPurchase.setAmount(amountDifference);
+//                                newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
+//
+//                                DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(mAmount.getContext()), newPurchase);
+//                            }
                         }
                     });
 
@@ -269,12 +269,12 @@ public abstract class ExpandableInventoryAdapter<
 
                     DatabaseInitializer.updateAmountAsync(AppDatabase.getAppDatabase(mAmount.getContext()), (Ingredient) itemView.getTag());
 
-                    Purchase newPurchase = new Purchase();
-                    newPurchase.setIngredientId(((Ingredient) itemView.getTag()).getId());
-                    newPurchase.setAmount(1);
-                    newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
-
-                    DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(mAmount.getContext()), newPurchase);
+//                    Purchase newPurchase = new Purchase();
+//                    newPurchase.setIngredientId(((Ingredient) itemView.getTag()).getId());
+//                    newPurchase.setAmount(1);
+//                    newPurchase.setPurchaseTimestamp(new DateTime().getMillis());
+//
+//                    DatabaseInitializer.insertOrUpdatePurchase(AppDatabase.getAppDatabase(mAmount.getContext()), newPurchase);
                 }
             });
         }

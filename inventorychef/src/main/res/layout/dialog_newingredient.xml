@@ -1,30 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <AutoCompleteTextView
         android:id="@+id/dialog_newingredient_name"
-        android:inputType="textEmailAddress"
+        style="@style/IngredientAutoCompleteTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="16dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="25dp"
+        android:completionThreshold="2"
         android:hint="@string/dialog_newingredient_name"
-        android:completionThreshold="2"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/dialog_newingredient_group"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/dialog_newingredient_storage"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:hint="@string/dialog_newingredient_group"/>
-</LinearLayout>
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/dialog_newingredient_storageplace"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_newingredient_storages"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_newingredient_name" />
+
+    <Spinner
+        android:id="@+id/dialog_newingredient_storages"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_newingredient_storage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialog_newingredient_storage"
+        app:layout_constraintTop_toTopOf="@+id/dialog_newingredient_storage" />
+
+    <AutoCompleteTextView
+        android:id="@+id/dialog_newingredient_newstorage"
+        style="@style/IngredientAutoCompleteTheme"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="16dp"
+        android:completionThreshold="2"
+        android:hint="@string/dialog_newingredient_newstorageplace"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toStartOf="@id/dialog_newingredient_addstorage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_newingredient_storage" />
+
+    <ImageButton
+        android:id="@+id/dialog_newingredient_addstorage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_newingredient_newstorage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/dialog_newingredient_newstorage"
+        app:layout_constraintTop_toTopOf="@+id/dialog_newingredient_newstorage"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+</android.support.constraint.ConstraintLayout>

@@ -3,6 +3,7 @@ package net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.databas
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -13,7 +14,8 @@ import android.support.annotation.NonNull;
             entity = StoragePlace.class,
             childColumns = "storageId",
             parentColumns = "id",
-            onDelete = ForeignKey.SET_NULL)
+            onDelete = ForeignKey.SET_NULL),
+            indices = {@Index("storageId")}
     )
     public class Ingredient {
 

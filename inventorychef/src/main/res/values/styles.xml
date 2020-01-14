@@ -21,4 +21,10 @@
         <item name="colorPrimary">@android:color/black</item>
     </style>
 
+    <style name="IngredientAutoCompleteTheme" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:colorBackground">#FF666666</item>
+        <item name="android:textColor">#FF000000</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
 </resources>

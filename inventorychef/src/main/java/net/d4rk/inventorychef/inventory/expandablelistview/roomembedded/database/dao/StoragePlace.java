@@ -2,6 +2,7 @@ package net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.databas
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
@@ -16,6 +17,9 @@ import android.arch.persistence.room.PrimaryKey;
     private String name;
     private boolean deleted;
     private long deleteTimestamp;
+
+    @Ignore
+    private long ingredientCount;
 
     public long getId() {
         return id;
@@ -47,5 +51,19 @@ import android.arch.persistence.room.PrimaryKey;
 
     public void setDeleteTimestamp(long deleteTimestamp) {
         this.deleteTimestamp = deleteTimestamp;
+    }
+
+
+    public long getIngredientCount() {
+        return ingredientCount;
+    }
+
+    public void setIngredientCount(long ingredientCount) {
+        this.ingredientCount = ingredientCount;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

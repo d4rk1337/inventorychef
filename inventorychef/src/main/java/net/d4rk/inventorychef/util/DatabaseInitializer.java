@@ -4,13 +4,10 @@ package net.d4rk.inventorychef.util;
  * Created by d4rk on 31/03/2018.
  */
 
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-//import net.d4rk.inventorychef.database.dao.Ingredient;
-//import net.d4rk.inventorychef.database.dao.Purchase;
 import net.d4rk.inventorychef.database.room.AppDatabase;
 import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.Ingredient;
 import net.d4rk.inventorychef.inventory.expandablelistview.roomembedded.database.dao.Purchase;
@@ -24,10 +21,28 @@ public class DatabaseInitializer {
 
     private static final String TAG = DatabaseInitializer.class.getName();
 
+    public static void insertStoragePlaceAsync(@NonNull final AppDatabase db,
+                                             final StoragePlace storagePlace) {
+        StoragePlaceInsertAsync task = new StoragePlaceInsertAsync(db);
+        task.execute(storagePlace);
+    }
+
+    public static void deleteStoragePlaceAsync(@NonNull final AppDatabase db,
+                                              final StoragePlace... storagePlaces) {
+        StoragePlaceDeleteAsync task = new StoragePlaceDeleteAsync(db);
+        task.execute(storagePlaces);
+    }
+
+    public static void reactivateStoragePlacesAsync(@NonNull final AppDatabase db,
+                                                  final StoragePlace... storagePlaces) {
+        StoragePlaceReactivateAsync task = new StoragePlaceReactivateAsync(db);
+        task.execute(storagePlaces);
+    }
+
     public static void insertIngredientAsync(@NonNull final AppDatabase db,
-                                             final String name) {
+                                             final Ingredient ingredient) {
         IngredientInsertAsync task = new IngredientInsertAsync(db);
-        task.execute(name);
+        task.execute(ingredient);
     }
 
     public static void deleteIngredientsAsync(@NonNull final AppDatabase db,
@@ -42,29 +57,27 @@ public class DatabaseInitializer {
         task.execute(ingredients);
     }
 
+
+
     public static void updateAmountAsync(@NonNull final AppDatabase db,
                                          final Ingredient ingredient) {
         IngredientAmountUpdateAsync task = new IngredientAmountUpdateAsync(db);
         task.execute(ingredient);
     }
 
-    public static void insertOrUpdatePurchase(@NonNull final AppDatabase db,
-                                              final Purchase purchase) {
-        PurchaseAsync task = new PurchaseAsync(db);
-        task.execute(purchase);
-    }
+//    public static void insertOrUpdatePurchase(@NonNull final AppDatabase db,
+//                                              final Purchase purchase) {
+//        PurchaseAsync task = new PurchaseAsync(db);
+//        task.execute(purchase);
+//    }
 
-    private static StoragePlace addStoragePlace(
+    private static void addStoragePlace(
             final AppDatabase db,
             StoragePlace storagePlace
     ) {
         Log.d(TAG, "(addStoragePlace): insert storage place to database");
 
-        long storageId = db.storagePlaceDao().insert(storagePlace);
-
-        storagePlace.setId(storageId);
-
-        return storagePlace;
+        db.storagePlaceDao().insert(storagePlace);
     }
 
     private static Ingredient addIngredient(final AppDatabase db,
@@ -78,7 +91,87 @@ public class DatabaseInitializer {
         return ingredient;
     }
 
-    private static class IngredientInsertAsync extends AsyncTask<String, Void, Void> {
+    private static class StoragePlaceInsertAsync extends AsyncTask<StoragePlace, Void, Void> {
+
+        private final AppDatabase mDb;
+
+        StoragePlaceInsertAsync(AppDatabase db) {
+            mDb = db;
+        }
+
+        @Override
+        protected Void doInBackground(final StoragePlace... storagePlaces) {
+            if(android.os.Debug.isDebuggerConnected())
+                android.os.Debug.waitForDebugger();
+
+            Log.d(TAG, "(doInBackground): insert new storage place to database");
+
+            addStoragePlace(mDb, storagePlaces[0]);
+
+            Log.d(TAG, "(populateWithTestData): ingredient added to list");
+            return null;
+        }
+
+    }
+
+    private static class StoragePlaceDeleteAsync extends AsyncTask<StoragePlace, Void, Void> {
+
+        private final AppDatabase mDb;
+
+        StoragePlaceDeleteAsync(AppDatabase db) {
+            mDb = db;
+        }
+
+        @Override
+        protected Void doInBackground(final StoragePlace... storagePlaces) {
+            if(android.os.Debug.isDebuggerConnected())
+                android.os.Debug.waitForDebugger();
+
+            Log.d(TAG, "(doInBackground): set storage place deleted in background");
+
+            for (StoragePlace currentStoragePlace: storagePlaces) {
+                currentStoragePlace.setDeleted(true);
+                currentStoragePlace.setDeleteTimestamp(new DateTime().getMillis());
+
+                mDb.storagePlaceDao().update(currentStoragePlace);
+
+                Log.d(TAG, "(doInBackground): storage place set deleted");
+            }
+
+            return null;
+        }
+
+    }
+
+    private static class StoragePlaceReactivateAsync extends AsyncTask<StoragePlace, Void, Void> {
+
+        private final AppDatabase mDb;
+
+        StoragePlaceReactivateAsync(AppDatabase db) {
+            mDb = db;
+        }
+
+        @Override
+        protected Void doInBackground(final StoragePlace... storagePlaces) {
+            if(android.os.Debug.isDebuggerConnected())
+                android.os.Debug.waitForDebugger();
+
+            Log.d(TAG, "(doInBackground): set storage place reactivated in background");
+
+            for (StoragePlace currentStoragePlace : storagePlaces) {
+                currentStoragePlace.setDeleted(false);
+
+                mDb.storagePlaceDao().update(currentStoragePlace);
+
+                Log.d(TAG, "(doInBackground): storage place reactivated");
+            }
+
+            return null;
+        }
+
+    }
+
+    private static class IngredientInsertAsync extends AsyncTask<Ingredient, Void, Void> {
 
         private final AppDatabase mDb;
 
@@ -87,26 +180,26 @@ public class DatabaseInitializer {
         }
 
         @Override
-        protected Void doInBackground(final String... names) {
+        protected Void doInBackground(final Ingredient... ingredients) {
             if(android.os.Debug.isDebuggerConnected())
                 android.os.Debug.waitForDebugger();
 
             Log.d(TAG, "(doInBackground): insert test data amount in background");
 
-            StoragePlace storagePlace = new StoragePlace();
-            storagePlace.setName("Test");
+//            StoragePlace storagePlace = new StoragePlace();
+//            storagePlace.setName("Test");
+//
+//            storagePlace = addStoragePlace(mDb, storagePlace);
 
-            storagePlace = addStoragePlace(mDb, storagePlace);
-
-            Ingredient ingredient = new Ingredient();
-            ingredient.setStorageId(storagePlace.getId());
-            ingredient.setGroup("");
-            ingredient.setName(names[0]);
-            ingredient.setUnit("");
+            Ingredient ingredient;
+//            ingredient.setStorageId(storagePlace.getId());
+//            ingredient.setGroup("");
+//            ingredient.setName(names[0]);
+//            ingredient.setUnit("");
 
             Log.d(TAG, "(populateWithTestData): ingredient created");
 
-            ingredient = addIngredient(mDb, ingredient);
+            ingredient = addIngredient(mDb, ingredients[0]);
 
             Log.d(TAG, "(populateWithTestData): ingredient added to list");
             return null;

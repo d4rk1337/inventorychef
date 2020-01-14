@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dialog_newingredient_name">Zutatenname</string>
-    <string name="dialog_newingredient_group">Zutatengruppe</string>
+    <string name="dialog_newingredient_storageplace">Lagerplatz</string>
+    <string name="dialog_newingredient_newstorageplace">Neuer Lagerplatz</string>
+
+    <string name="dialog_newingredient_error_name">Kein Zutatenname eingegeben</string>
+    <string name="dialog_newingredient_error_storageplace">Kein Lagerplatz gewählt</string>
+    <string name="dialog_newingredient_error_newstorageplace">Kein neuer Lagerplatz eingegeben</string>
+    <string name="dialog_newingredient_error_newstorageplace_taken">Lagerplatz bereits vorhanden</string>
 </resources>
